@@ -3,6 +3,7 @@ import * as d3 from 'd3'
 import firebase from 'firebase'
 import {config} from '../../firebase-init'
 import {formatDate} from '../../date'
+import styles from './sensor-detail.css'
 
 const commandString = (userId, sensorId) => {
   const postUrl = `${config.databaseURL}/${userId}/values/${sensorId}.json`
@@ -170,7 +171,7 @@ export class SensorDetail extends React.Component {
     return <div>
       <div>
         <h2>Usage</h2>
-        <div className='ui segment'>
+        <div className={`ui segment ${styles.command}`}>
           {commandString(user.uid, this.props.params.sensorId)}
         </div>
       </div>
