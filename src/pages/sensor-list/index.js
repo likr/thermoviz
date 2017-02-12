@@ -15,11 +15,18 @@ export class SensorList extends React.Component {
   componentDidMount () {
     const {user} = this.props
     this.sensorsRef = firebase.database().ref(`${user.uid}/sensors`)
-    this.sensorsRef.on('value', (snapshot) => {
+    this.sensorsHandler = (snapshot) => {
       this.setState({
         sensors: snapshot.val()
       })
-    })
+    }
+    this.sensorsRef
+      .orderByChild('created')
+      .on('value', this.sensorsHandler)
+  }
+
+  componentWillUnmount () {
+    this.sensorsRef.off('value', this.sensorsHandler)
   }
 
   render () {

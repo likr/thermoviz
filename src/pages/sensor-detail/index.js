@@ -17,6 +17,13 @@ const commandString = (userId, sensorId) => {
 
 const range = (start, stop, step) => {
   const result = []
+  if (step <= 0) {
+    if (start === stop) {
+      return [start]
+    } else {
+      return [start, stop]
+    }
+  }
   for (let i = start; i <= stop; i += step) {
     result.push(i)
   }
@@ -115,31 +122,41 @@ export class SensorDetail extends React.Component {
     const {sensorId} = this.props.params
 
     this.sensorRef = firebase.database().ref(`${user.uid}/sensors/${sensorId}`)
-    this.sensorRef
-      .orderByChild('created')
-      .limitToLast(240)
-      .on('value', (snapshot) => {
-        this.setState({
-          sensor: snapshot.val()
-        })
+    this.sensorHandler = (snapshot) => {
+      this.setState({
+        sensor: snapshot.val()
       })
+    }
+    this.sensorRef
+      .on('value', this.sensorHandler)
 
     this.sensorValuesRef = firebase.database().ref(`${user.uid}/values/${sensorId}`)
-    this.sensorValuesRef.on('value', (snapshot) => {
+    this.sensorValuesHandler = (snapshot) => {
       this.setState({
         sensorValues: snapshot.val()
       })
-    })
+    }
+    this.sensorValuesRef
+      .orderByChild('created')
+      .limitToLast(500)
+      .on('value', this.sensorValuesHandler)
 
     this.setState({
       svgWidth: this.refs.svgWrapper.clientWidth
     })
 
-    window.addEventListener('resize', () => {
+    this.resizeHandler = () => {
       this.setState({
         svgWidth: this.refs.svgWrapper.clientWidth
       })
-    })
+    }
+    window.addEventListener('resize', this.resizeHandler)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('resize', this.resizeHandler)
+    this.sensorRef.off('value', this.sensorHandler)
+    this.sensorValuesRef.off('value', this.sensorValuesHandler)
   }
 
   render () {
