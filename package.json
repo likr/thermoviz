@@ -1,0 +1,35 @@
+{
+  "name": "thermoviz",
+  "description": "Description of your app.",
+  "version": "0.0.0",
+  "author": "Yosuke Onoue <onoue@likr-lab.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/likr/thermoviz.git"
+  },
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack-dev-server",
+    "deploy": "NODE_ENV=production npm run build && firebase deploy"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.22.0",
+    "d3": "^4.5.0",
+    "firebase": "^3.6.9",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-router": "^3.0.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-latest": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "css-loader": "^0.26.1",
+    "firebase-tools": "^3.2.3",
+    "style-loader": "^0.13.1",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.3.0"
+  }
+}

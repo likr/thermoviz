@@ -1,0 +1,13 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "$user_id": {
+      "values": {
+        "$sensor_id": {
+          ".write": "true"
+        }
+      }
+    }
+  }
+}
