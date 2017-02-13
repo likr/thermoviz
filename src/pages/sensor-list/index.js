@@ -13,8 +13,8 @@ export class SensorList extends React.Component {
   }
 
   componentDidMount () {
-    const {user} = this.props
-    this.sensorsRef = firebase.database().ref(`${user.uid}/sensors`)
+    const {userId} = this.props.params
+    this.sensorsRef = firebase.database().ref(`${userId}/sensors`)
     this.sensorsHandler = (snapshot) => {
       this.setState({
         sensors: snapshot.val()
@@ -76,7 +76,8 @@ export class SensorList extends React.Component {
   }
 
   handleClickTableRow (id) {
-    this.context.router.push(`/sensors/${id}`)
+    const {userId} = this.props.params
+    this.context.router.push(`/${userId}/sensors/${id}`)
   }
 }
 

@@ -29,8 +29,9 @@ class LoginForm extends React.Component {
 
 class Home extends React.Component {
   render () {
+    const {user} = this.props
     return <div>
-      <Link className='ui button' to='sensors'>Home</Link>
+      <Link className='ui button' to={`/${user.uid}/sensors`}>Home</Link>
     </div>
   }
 }
@@ -40,7 +41,7 @@ export class Root extends React.Component {
     const {user} = this.props
     return <div>
       <div>{
-        user ? <Home /> : <LoginForm />
+        user ? <Home user={user} /> : <LoginForm />
       }</div>
     </div>
   }

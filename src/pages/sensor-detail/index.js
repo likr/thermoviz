@@ -119,10 +119,9 @@ export class SensorDetail extends React.Component {
   }
 
   componentDidMount () {
-    const {user} = this.props
-    const {sensorId} = this.props.params
+    const {userId, sensorId} = this.props.params
 
-    this.sensorRef = firebase.database().ref(`${user.uid}/sensors/${sensorId}`)
+    this.sensorRef = firebase.database().ref(`${userId}/sensors/${sensorId}`)
     this.sensorHandler = (snapshot) => {
       this.setState({
         sensor: snapshot.val()
@@ -131,7 +130,7 @@ export class SensorDetail extends React.Component {
     this.sensorRef
       .on('value', this.sensorHandler)
 
-    this.sensorValuesRef = firebase.database().ref(`${user.uid}/values/${sensorId}`)
+    this.sensorValuesRef = firebase.database().ref(`${userId}/values/${sensorId}`)
     this.sensorValuesHandler = (snapshot) => {
       this.setState({
         sensorValues: snapshot.val()
@@ -161,7 +160,7 @@ export class SensorDetail extends React.Component {
   }
 
   render () {
-    const {user} = this.props
+    const {userId} = this.props.params
     const {svgWidth, sensorValues} = this.state
     const values = Object.keys(sensorValues).map((key) => {
       return sensorValues[key]
@@ -172,7 +171,7 @@ export class SensorDetail extends React.Component {
       <div>
         <h2>Usage</h2>
         <div className={`ui segment ${styles.command}`}>
-          {commandString(user.uid, this.props.params.sensorId)}
+          {commandString(userId, this.props.params.sensorId)}
         </div>
       </div>
       <div className='ui divider' />

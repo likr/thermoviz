@@ -5,9 +5,19 @@
     "$user_id": {
       "values": {
         "$sensor_id": {
-          ".write": "true"
+          ".write": "true",
+          ".indexOn": ["created"],
+          "$value_id": {
+            "t": {
+              ".validate": "newData.isNumber() && newData.val() <= now"
+            },
+            "v": {
+              ".validate": "newData.isNumber()"
+            }
+          }
         }
       }
     }
   }
 }
+
