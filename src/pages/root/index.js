@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
-import firebase from 'firebase'
+import {signIn} from '../../models/auth'
 
 class LoginForm extends React.Component {
   render () {
@@ -21,11 +21,9 @@ class LoginForm extends React.Component {
     event.preventDefault()
     const email = this.refs.email.value
     const password = this.refs.password.value
-    firebase.auth()
-      .signInWithEmailAndPassword(email, password)
-      .catch((error) => {
-        console.log(error)
-      })
+    signIn(email, password).catch((error) => {
+      console.log(error)
+    })
   }
 }
 

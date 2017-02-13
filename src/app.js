@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router'
 import $ from 'jquery'
-import firebase from 'firebase'
+import {Auth, signOut} from './models/auth'
 import styles from './app.css'
 
 class UserMenu extends React.Component {
@@ -28,10 +28,9 @@ export class App extends React.Component {
   }
 
   componentWillMount () {
-    firebase.auth()
-      .onAuthStateChanged((user) => {
-        this.setState({user})
-      })
+    Auth().subscribe((user) => {
+      this.setState({user})
+    })
   }
 
   componentDidMount () {
@@ -62,11 +61,9 @@ export class App extends React.Component {
   }
 
   handleClickSignOutButton () {
-    firebase.auth()
-      .signOut()
-      .then(() => {
-        this.context.router.push('/')
-      })
+    signOut().then(() => {
+      this.context.router.push('/')
+    })
   }
 }
 
