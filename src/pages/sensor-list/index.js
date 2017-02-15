@@ -1,6 +1,6 @@
 import React from 'react'
-import firebase from 'firebase'
 import {formatDate} from '../../date'
+import {getSensors, addSensor} from '../../models/sensors'
 import styles from './sensor-list.css'
 
 export class SensorList extends React.Component {
@@ -14,19 +14,15 @@ export class SensorList extends React.Component {
 
   componentDidMount () {
     const {userId} = this.props.params
-    this.sensorsRef = firebase.database().ref(`${userId}/sensors`)
-    this.sensorsHandler = (snapshot) => {
+    this.sensorsSubscription = getSensors(userId).subscribe((snapshot) => {
       this.setState({
         sensors: snapshot.val()
       })
-    }
-    this.sensorsRef
-      .orderByChild('created')
-      .on('value', this.sensorsHandler)
+    })
   }
 
   componentWillUnmount () {
-    this.sensorsRef.off('value', this.sensorsHandler)
+    this.sensorsSubscription.unsubscribe()
   }
 
   render () {
@@ -69,9 +65,9 @@ export class SensorList extends React.Component {
 
   handleSubmitRegisterForm (event) {
     event.preventDefault()
-    this.sensorsRef.push({
-      name: this.refs.name.value,
-      created: firebase.database.ServerValue.TIMESTAMP
+    const {userId} = this.props.params
+    addSensor(userId, {
+      name: this.refs.name.value
     })
   }
 
