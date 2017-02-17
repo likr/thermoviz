@@ -1,18 +1,15 @@
-import Rx from 'rxjs/Rx'
 import firebase from 'firebase'
+import {firebaseValue} from './firebase'
 
 export const getSensors = (userId) => {
-  return Rx.Observable.create((observer) => {
-    const handler = (snapshot) => {
-      observer.next(snapshot)
-    }
-    const ref = firebase.database()
-      .ref(`${userId}/sensors`)
-    ref.orderByChild('created')
-      .on('value', handler)
-    return () => {
-      ref.off('value', handler)
-    }
+  return firebaseValue(`${userId}/sensors`, (ref) => {
+    return ref.orderByChild('created')
+  })
+}
+
+export const getSensor = (userId, sensorId) => {
+  return firebaseValue(`${userId}/sensors/${sensorId}`, (ref) => {
+    return ref
   })
 }
 

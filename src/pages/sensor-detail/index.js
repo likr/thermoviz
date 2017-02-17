@@ -1,8 +1,9 @@
 import React from 'react'
 import * as d3 from 'd3'
-import firebase from 'firebase'
 import {config} from '../../firebase-init'
 import {formatDate} from '../../date'
+import {getSensor} from '../../models/sensors'
+import {getValues} from '../../models/values'
 import styles from './sensor-detail.css'
 
 const commandString = (userId, sensorId) => {
@@ -121,25 +122,17 @@ export class SensorDetail extends React.Component {
   componentDidMount () {
     const {userId, sensorId} = this.props.params
 
-    this.sensorRef = firebase.database().ref(`${userId}/sensors/${sensorId}`)
-    this.sensorHandler = (snapshot) => {
+    this.sensorSubscription = getSensor(userId, sensorId).subscribe((snapshot) => {
       this.setState({
         sensor: snapshot.val()
       })
-    }
-    this.sensorRef
-      .on('value', this.sensorHandler)
+    })
 
-    this.sensorValuesRef = firebase.database().ref(`${userId}/values/${sensorId}`)
-    this.sensorValuesHandler = (snapshot) => {
+    this.valuesSubscription = getValues(userId, sensorId).subscribe((snapshot) => {
       this.setState({
         sensorValues: snapshot.val()
       })
-    }
-    this.sensorValuesRef
-      .orderByChild('created')
-      .limitToLast(500)
-      .on('value', this.sensorValuesHandler)
+    })
 
     this.setState({
       svgWidth: this.refs.svgWrapper.clientWidth
@@ -155,8 +148,8 @@ export class SensorDetail extends React.Component {
 
   componentWillUnmount () {
     window.removeEventListener('resize', this.resizeHandler)
-    this.sensorRef.off('value', this.sensorHandler)
-    this.sensorValuesRef.off('value', this.sensorValuesHandler)
+    this.sensorSubscription.unsubscribe()
+    this.valuesSubscription.unsubscribe()
   }
 
   render () {
